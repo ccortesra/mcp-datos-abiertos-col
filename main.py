@@ -12,6 +12,9 @@ from dotenv import load_dotenv
 import os
 load_dotenv()
 
+# Configuration: Set to False to show the browser window, True to run headless
+HEADLESS_MODE = os.getenv('HEADLESS_MODE', 'True').lower() == 'true'  # Set via environment variable or default to True
+print(f"HEADLESS_MODE: {HEADLESS_MODE}")
 # Create an MCP server
 mcp = FastMCP("Demo")
 
@@ -24,7 +27,15 @@ def fetch_data(search_query: str) -> str:
         return "Error: APP_TOKEN not found in environment variables"
     
     try:
-        query_url = scraping.webscrape(search_query)
+        query_url = scraping.webscrape(search_query, headless=HEADLESS_MODE)
+        
+        # Check if webscrape returned an error message instead of a URL
+        if query_url.startswith("Error:"):
+            return query_url
+        
+        # Validate that we have a proper URL
+        if not query_url.startswith(("http://", "https://")):
+            return f"Error: Invalid URL returned from webscrape: {query_url}"
 
         req = requests.get(query_url)
         req.raise_for_status()
