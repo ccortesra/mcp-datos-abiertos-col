@@ -32,3 +32,7 @@ def fetch_data(search_query: str) -> str:
         
     except Exception as e:
         return f"Error: {str(e)}"
+
+
+if __name__ == "__main__":
+    mcp.run(transport="stdio")

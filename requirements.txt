@@ -1,0 +1,8 @@
+# Colombian Open Data MCP Server Requirements
+# Generated from pyproject.toml dependencies
+
+mcp[cli]>=1.13.1
+selenium>=4.35.0
+requests>=2.31.0
+python-dotenv>=1.0.0
+webdriver-manager>=4.0.0
