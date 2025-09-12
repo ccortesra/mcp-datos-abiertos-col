@@ -2,10 +2,10 @@ from selenium import webdriver
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.by import By
-from webdriver_manager.chrome import ChromeDriverManager
 import time
 from dotenv import load_dotenv
 import os
+import shutil
 load_dotenv()
 app_token = os.getenv('APP_TOKEN')
 
@@ -37,14 +37,39 @@ def webscrape(search_query: str, headless: bool = True) -> str:
     chrome_options.add_argument("--window-size=1920,1080")
     chrome_options.add_argument("--disable-extensions")
     chrome_options.add_argument("--disable-plugins")
+    chrome_options.add_argument("--remote-debugging-port=9222")
+    chrome_options.add_argument("--disable-web-security")
+    chrome_options.add_argument("--allow-running-insecure-content")
+    chrome_options.add_argument("--disable-features=VizDisplayCompositor")
     
     # Only disable images in headless mode for better performance
     if headless:
         chrome_options.add_argument("--disable-images")
     
     try:
-        # Automatically download and manage ChromeDriver
-        service = Service(ChromeDriverManager().install())
+        # Use system-installed ChromeDriver to avoid version mismatch
+        chromedriver_path = shutil.which('chromedriver')
+        if chromedriver_path:
+            print(f"Using system ChromeDriver at: {chromedriver_path}")
+            service = Service(chromedriver_path)
+        else:
+            # Fallback to common system paths
+            common_paths = [
+                '/usr/bin/chromedriver',
+                '/usr/local/bin/chromedriver',
+                '/app/chromedriver'  # Docker container path
+            ]
+            
+            service = None
+            for path in common_paths:
+                if os.path.exists(path):
+                    print(f"Using ChromeDriver at: {path}")
+                    service = Service(path)
+                    break
+            
+            if not service:
+                return "Error: ChromeDriver not found. Please install chromedriver that matches your Chrome/Chromium version"
+        
         driver = webdriver.Chrome(service=service, options=chrome_options)
     except Exception as e:
         return f"Error: Could not start Chrome browser - {str(e)}"
