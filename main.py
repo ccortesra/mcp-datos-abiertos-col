@@ -20,6 +20,7 @@ try:
 
     # Configuration: Set to False to show the browser window, True to run headless
     HEADLESS_MODE = os.getenv('HEADLESS_MODE', 'True').lower() == 'true'  # Set via environment variable or default to True
+    QUERY_LIMIT_ROW = os.getenv('QUERY_LIMIT_ROW', '50')
     print(f"HEADLESS_MODE: {HEADLESS_MODE}", file=sys.stderr)
     
     # Create an MCP server
@@ -38,27 +39,41 @@ try:
     @mcp.tool()
     def fetch_data(search_query: str) -> str:
         """Fetch data from Colombian Open Data API"""
+        print(f"[TOOL] Starting fetch_data with search_query: '{search_query}'", file=sys.stderr)
+        
         app_token = os.getenv('APP_TOKEN')
         if not app_token:
+            print("[TOOL] Error: APP_TOKEN not found in environment variables", file=sys.stderr)
             return "Error: APP_TOKEN not found in environment variables"
         
+        print(f"[TOOL] APP_TOKEN found, length: {len(app_token)}", file=sys.stderr)
+        
         try:
+            print(f"[TOOL] Starting webscrape with headless mode: {HEADLESS_MODE}", file=sys.stderr)
             query_url = scraping.webscrape(search_query, headless=HEADLESS_MODE)
+            print(f"[TOOL] Webscrape completed, returned: {query_url[:100]}...", file=sys.stderr)
             
             # Check if webscrape returned an error message instead of a URL
             if query_url.startswith("Error:"):
+                print(f"[TOOL] Webscrape returned error: {query_url}", file=sys.stderr)
                 return query_url
             
             # Validate that we have a proper URL
             if not query_url.startswith(("http://", "https://")):
-                return f"Error: Invalid URL returned from webscrape: {query_url}"
+                error_msg = f"Error: Invalid URL returned from webscrape: {query_url}"
+                print(f"[TOOL] {error_msg}", file=sys.stderr)
+                return error_msg
 
+            print(f"[TOOL] Making HTTP request to: {query_url}", file=sys.stderr)
             req = requests.get(query_url)
             req.raise_for_status()
+            print(f"[TOOL] HTTP request successful, response length: {len(req.text)}", file=sys.stderr)
             return req.text
             
         except Exception as e:
-            return f"Error: {str(e)}"
+            error_msg = f"Error: {str(e)}"
+            print(f"[TOOL] Exception occurred: {error_msg}", file=sys.stderr)
+            return error_msg
 
     print("Tool defined successfully", file=sys.stderr)
 
