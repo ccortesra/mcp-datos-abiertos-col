@@ -120,55 +120,19 @@ def webscrape(search_query: str, headless: bool = True) -> str:
                 logging.info("Waiting for dataset page to load...")
                 time.sleep(2)
                 
-                # FIND BUTTON THAT SAYS "Descargar"
-                logging.info("Looking for download button (forge-button)...")
-                buttons = driver.find_elements(By.TAG_NAME, "forge-button")
-                logging.info("Found download button, clicking...")
-                buttons[1].click()
+                # Get the current URL
+                current_page = driver.current_url
+                print("Current URL:", current_page)
 
-                logging.info("Waiting for download options to appear...")
-                time.sleep(2)
+                dataset_id = current_page.split("/")[-2]
+                print("Dataset ID:", dataset_id)
 
-                logging.info("Looking for export format buttons...")
-                forge_button_toggles = driver.find_elements(By.TAG_NAME, 'forge-button-toggle')
-                logging.info(f"Found {len(forge_button_toggles)} export format buttons")
-                
-                # Check if we have enough buttons
-                if len(forge_button_toggles) < 2:
-                    logging.warning(f"Not enough forge-button-toggle elements found: {len(forge_button_toggles)}, skipping this dataset")
-                    continue
-                    
-                logging.info("Clicking API export button (2nd toggle button)...")
-                api_export_button = forge_button_toggles[1]
-                api_export_button.click()
-
-                logging.info("Waiting for API endpoint to appear...")
-                time.sleep(2)
-
-                # FIND API ENDPOINT INPUT
-                id_api_url = 'api-endpoint'
                 try:
-                    logging.info(f"Looking for API endpoint input with ID: {id_api_url}")
-                    api_url_element = driver.find_element(By.ID, id_api_url)
-                    api_url = api_url_element.get_attribute('value')
-                    
-                    if not api_url:
-                        logging.warning("API URL element found but value is empty, trying next dataset")
-                        continue
-                        
-                    logging.info(f"Found raw API URL: {api_url}")
+                    logging.info(f"Constructing API URL for dataset ID: {dataset_id}")
+                    api_url = "https://www.datos.gov.co/resource/" + f"{dataset_id}.json"
+                    logging.info(f"Constructed base API URL: {api_url}")
 
-                    query_components = api_url.split("/")
-                    logging.info(f"URL components: {query_components}")
-                    
-                    # Validate URL structure
-                    if len(query_components) < 7:
-                        logging.warning(f"URL structure invalid, not enough components: {len(query_components)}, trying next dataset")
-                        continue
-
-                    api_url = "/".join(query_components[:3]) + "/resource/" + f"{query_components[6]}.json"
-                    api_url = api_url + "?$limit=5&$$app_token=" + app_token
-                    logging.info(f"Final constructed API URL: {api_url}")
+                    api_url = api_url + "?$limit=20&$$app_token=" + app_token
                     logging.info("Successfully found API endpoint, returning URL")
                     return api_url
                     
