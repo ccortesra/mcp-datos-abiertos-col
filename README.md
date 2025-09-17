@@ -9,6 +9,7 @@ Puede ser integrado en cualquier MCP Host(Claude, VS Code, etc.). Y no es necesa
 
 - Tener Docker instalado.
 - Tener un MCP Host (Claude, VS Code, etc.)
+- Si vas a usar VSCode o Cursor, tiene que tener la opción de chatear con LLMs, (Copilot en el caso de VS Code)
 
 # Pasos para usar el MCP:
 
