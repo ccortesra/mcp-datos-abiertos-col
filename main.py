@@ -38,7 +38,16 @@ try:
     print("Defining fetch_data tool...", file=sys.stderr)
     @mcp.tool()
     def fetch_data(search_query: str) -> str:
-        """Fetch data from Colombian Open Data API"""
+        """
+        Fetch data from Colombian Open Data API, this tool will fetch data given a search query. And will return the data in a JSON format.
+        Busca datos en la plataforma de datos abiertos Colombia, dado un término de búsqueda, y retorna los datos en un formato JSON.
+        
+        Args:
+            search_query (str): The search term to look for datasets
+        
+        Returns:
+            str: JSON string with the data
+        """
         print(f"[TOOL] Starting fetch_data with search_query: '{search_query}'", file=sys.stderr)
         
         app_token = os.getenv('APP_TOKEN')
