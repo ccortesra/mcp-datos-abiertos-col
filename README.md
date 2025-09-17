@@ -5,6 +5,11 @@ Colombia. El cuál proporciona datos relevantes de Colombia.
 
 Puede ser integrado en cualquier MCP Host(Claude, VS Code, etc.). Y no es necesario instalar nada. Simplement cumplir los siguientes pasos.
 
+# Prerrequisitos
+
+- Tener Docker instalado.
+- Tener un MCP Host (Claude, VS Code, etc.)
+
 # Pasos para usar el MCP:
 
 1. Tener algún MCP Host (Claude, VS Code, etc.), y tener Docker.
@@ -13,6 +18,10 @@ Puede ser integrado en cualquier MCP Host(Claude, VS Code, etc.). Y no es necesa
 Información para la obtención del token: https://dev.socrata.com/foundry/www.datos.gov.co/2iz5-9bbz 
 
 ![](assets/apptoken.png)
+
+Al entrar en los Developer Settings en la aplicación de datos abiertos, se debe evidenciar la existencia del token:
+
+![](assets/appconfig.png)
 
 3. Pegar lo siguiente, en la configuración de MCP del Host.
 
