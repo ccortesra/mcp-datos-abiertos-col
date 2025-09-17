@@ -96,7 +96,7 @@ def webscrape(search_query: str, headless: bool = True) -> str:
         logging.info(f"Navigating to search URL: {search_url}")
         driver.get(search_url)
         logging.info("Waiting for page to load...")
-        time.sleep(4)
+        time.sleep(2)
        
         tag = 'entry-name-link'
         logging.info(f"Looking for dataset links with class: {tag}")
@@ -122,9 +122,9 @@ def webscrape(search_query: str, headless: bool = True) -> str:
                 
                 # FIND BUTTON THAT SAYS "Descargar"
                 logging.info("Looking for download button (forge-button)...")
-                button = driver.find_element(By.TAG_NAME, "forge-button")
+                buttons = driver.find_elements(By.TAG_NAME, "forge-button")
                 logging.info("Found download button, clicking...")
-                button.click()
+                buttons[1].click()
 
                 logging.info("Waiting for download options to appear...")
                 time.sleep(2)
@@ -143,7 +143,7 @@ def webscrape(search_query: str, headless: bool = True) -> str:
                 api_export_button.click()
 
                 logging.info("Waiting for API endpoint to appear...")
-                time.sleep(4)
+                time.sleep(2)
 
                 # FIND API ENDPOINT INPUT
                 id_api_url = 'api-endpoint'
