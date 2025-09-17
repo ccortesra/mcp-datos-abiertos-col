@@ -49,3 +49,23 @@ Ingresar el atajo `Ctrl + Shift + P` y escribir `MCP: Open User Configuration`.
         }
       }
 ```
+
+4. Si la configuración se pego bien, al hacer`Ctrl + Shift + P` y escribir `MCP: List Servers`, debe aparecer el MCP
+de datos-abiertos-col.
+
+![](assets/mcplist.png)
+![](assets/mcp-datos.png)
+
+
+5. Debes inicializar el MCP seleccionando la opción `Start Server`
+
+![](assets/startserver.png)
+
+
+6. Si la inicialización fue exitosa debes ver los logs de la pestaña `OUTPUT` similar a esto:
+
+![](assets/outputlogs.png)
+
+7. Ya puedes probar el MCP ! Abre la pestaña de GitHub Copilot, y dile que busque información de Colombia, sobre lo que quieras:
+
+![](assets/mcpresults.jpeg)
